@@ -1,6 +1,5 @@
 import board
-import terminalio
-import adafruit_matrixportal.matrixportal import MatrixPortal
+from adafruit_matrixportal.matrixportal import MatrixPortal
 
 WIDTH = 64
 HEIGHT = 32
