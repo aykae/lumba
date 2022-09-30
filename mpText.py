@@ -1,4 +1,3 @@
-import board
 from adafruit_matrixportal.matrixportal import MatrixPortal
 
 WIDTH = 64
@@ -13,6 +12,7 @@ mp.add_text(
         0,0
         #(mp.graphics.display.width)
     ),
+    text_scale = 1,
     text_color=0x800000
 )
 
@@ -20,4 +20,3 @@ mp.set_text("LUMBA")
 
 while True:
     continue
-    #time.sleep()
