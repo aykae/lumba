@@ -28,10 +28,13 @@ display.show(group)
 text = "LUMBA"
 text_area = label.Label(terminalio.FONT, text=text, background_tight=True, background_color=0x800000)
 text_area.x = 0
-text_area.y = 4#text_area.bounding_box[3] // 2
+text_area.y = text_area.bounding_box[3] // 3 * 2
+text_area.scale = 2
+text_area.flip_x = True
+#text_area.flip_y = True
 print(text_area.bounding_box)
 group.append(text_area)
-#display.show(text_area)
+group.flip_x = True
 
 while True:
     pass
