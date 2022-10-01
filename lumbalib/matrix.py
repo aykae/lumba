@@ -46,22 +46,12 @@ class Matrix:
         height=32,
         bit_depth=2,
         alt_addr_pins=None,
-        color_order="RGB",
         serpentine=True,
         tile_rows=1,
         rotation=0,
     ):
 
         panel_height = height // tile_rows
-
-        if not isinstance(color_order, str):
-            raise ValueError("color_index should be a string")
-        color_order = color_order.lower()
-        red_index = color_order.find("r")
-        green_index = color_order.find("g")
-        blue_index = color_order.find("b")
-        if -1 in (red_index, green_index, blue_index):
-            raise ValueError("color_order should contain R, G, and B")
 
         # MatrixPortal M4 Board
         addr_pins = [board.MTX_ADDRA, board.MTX_ADDRB, board.MTX_ADDRC]
@@ -97,12 +87,12 @@ class Matrix:
                     height=height,
                     bit_depth=bit_depth,
                     rgb_pins=(
-                        rgb_pins[red_index],
-                        rgb_pins[green_index],
-                        rgb_pins[blue_index],
-                        rgb_pins[red_index + 3],
-                        rgb_pins[green_index + 3],
-                        rgb_pins[blue_index + 3],
+                        rgb_pins[0],
+                        rgb_pins[1],
+                        rgb_pins[2],
+                        rgb_pins[0 + 3],
+                        rgb_pins[1 + 3],
+                        rgb_pins[2 + 3],
                     ),
                     addr_pins=addr_pins,
                     clock_pin=clock_pin,
@@ -118,12 +108,12 @@ class Matrix:
                     height=height,
                     bit_depth=bit_depth,
                     rgb_pins=(
-                        rgb_pins[red_index],
-                        rgb_pins[green_index],
-                        rgb_pins[blue_index],
-                        rgb_pins[red_index + 3],
-                        rgb_pins[green_index + 3],
-                        rgb_pins[blue_index + 3],
+                        rgb_pins[0],
+                        rgb_pins[1],
+                        rgb_pins[2],
+                        rgb_pins[0 + 3],
+                        rgb_pins[1 + 3],
+                        rgb_pins[2 + 3],
                     ),
                     addr_pins=addr_pins,
                     clock_pin=clock_pin,
@@ -140,9 +130,13 @@ class Matrix:
         except ValueError:
             raise RuntimeError("Failed to initialize RGB Matrix") from ValueError
     
-    def setPixel(self, x, y, r, g, b):
+    def rgbTo565(self, r, g, b):
         converter = displayio.ColorConverter()
         c888 = '%02x%02x%02x' % (max(0,min(r,255)), max(0,min(g,255)), max(0,min(b,255)))
         c565 = converter.convert(int(c888, 16))
-        self.buffer[y*self.display.width + x] = c565
+        return c565
+
+    def setPixel(self, x, y, r, g, b):
+        color = self.rgbTo565(r, g, b)
+        self.buffer[y*self.display.width + x] = color
         self.display.refresh()
