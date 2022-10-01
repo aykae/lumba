@@ -17,7 +17,7 @@ uart = UARTService()
 advertisement = ProvideServicesAdvertisement(uart)
 
 #Matrix Setup
-matrix = Matrix(width=64, height=32)
+matrix = Matrix(width=64, height=32, rotation=180)
 display = matrix.display
 text = "LUMBA"
 tb = label.Label(terminalio.FONT, text=text, background_color=0x800000)
@@ -50,7 +50,7 @@ def sendWord():
         if data:
             uart.write(data)
 
-def drawWord():
+def displayWord():
     ble.start_advertising(advertisement)
     print("Waiting to connect...")
     while not ble.connected:
@@ -69,4 +69,4 @@ def drawWord():
 
 
 while True:
-    drawWord()
+    displayWord()
