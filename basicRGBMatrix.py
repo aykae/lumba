@@ -1,11 +1,13 @@
-from lumba_matrix.matrix import Matrix
+#from lumba_matrix.matrix import Matrix
+from matrix import Matrix
 
-matrix = Matrix(width=64, height=32)
+WIDTH = 64
+HEIGHT = 32
+matrix = Matrix(width=WIDTH, height=HEIGHT)
 
-try:
-    matrix.setPixel(0, 0, 0, 0, 0)
-except:
-    print("caught exception")
+
+matrix.setPixel(WIDTH-1, HEIGHT-1, 0, 250, 0)
 
 while True:
+    matrix.display.refresh()
     pass

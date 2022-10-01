@@ -21,7 +21,7 @@ import displayio
 import rgbmatrix
 import array
 
-class Matrix(rgbmatrix.RGBMatrix):
+class Matrix:
     """Class representing the Adafruit RGB Matrix. This is used to automatically
     initialize the display.
     :param int width: The width of the display in Pixels. Defaults to 64.
@@ -81,9 +81,9 @@ class Matrix(rgbmatrix.RGBMatrix):
         latch_pin = board.MTX_LAT
         oe_pin = board.MTX_OE
 
-        self.buffer = array.array('I') #an unsigned int array
+        self.buffer = array.array('H') #an unsigned short array (16 bits)
         for i in range(width*height):
-            self.buffer[i] = 0xF800
+            self.buffer.append(int(0xF800))
 
         # Alternate Address Pins
         if alt_addr_pins is not None:
@@ -92,7 +92,7 @@ class Matrix(rgbmatrix.RGBMatrix):
         try:
             displayio.release_displays()
             if tile_rows > 1:
-                super().__init__(
+                self.display = rgbmatrix.RGBMatrix(
                     width=width,
                     height=height,
                     bit_depth=bit_depth,
@@ -113,7 +113,7 @@ class Matrix(rgbmatrix.RGBMatrix):
                     framebuffer = self.buffer
                 )
             else:
-                super().__init__(
+                self.display = rgbmatrix.RGBMatrix(
                     width=width,
                     height=height,
                     bit_depth=bit_depth,
@@ -141,5 +141,8 @@ class Matrix(rgbmatrix.RGBMatrix):
             raise RuntimeError("Failed to initialize RGB Matrix") from ValueError
     
     def setPixel(self, x, y, r, g, b):
-        print(self.framebuffer)
-        self.refresh()
+        converter = displayio.ColorConverter()
+        c888 = (r << 16) | (g << 8) | b 
+        c565 = converter.convert(c888)
+        self.display.framebuffer[y*self.width + x] = c565
+        self.display.refresh()
