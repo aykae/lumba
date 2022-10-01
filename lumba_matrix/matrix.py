@@ -19,7 +19,6 @@ Implementation Notes
 import board
 import displayio
 import rgbmatrix
-import framebufferio
 import array
 
 class Matrix(rgbmatrix.RGBMatrix):
@@ -93,7 +92,7 @@ class Matrix(rgbmatrix.RGBMatrix):
         try:
             displayio.release_displays()
             if tile_rows > 1:
-                self.display = rgbmatrix.RGBMatrix(
+                super().__init__(
                     width=width,
                     height=height,
                     bit_depth=bit_depth,
@@ -114,7 +113,7 @@ class Matrix(rgbmatrix.RGBMatrix):
                     framebuffer = self.buffer
                 )
             else:
-                self.display = rgbmatrix.RGBMatrix(
+                super().__init__(
                     width=width,
                     height=height,
                     bit_depth=bit_depth,
@@ -142,4 +141,5 @@ class Matrix(rgbmatrix.RGBMatrix):
             raise RuntimeError("Failed to initialize RGB Matrix") from ValueError
     
     def setPixel(self, x, y, r, g, b):
-        print(self.display)
+        print(self.framebuffer)
+        self.refresh()
