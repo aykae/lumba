@@ -142,7 +142,7 @@ class Matrix:
     
     def setPixel(self, x, y, r, g, b):
         converter = displayio.ColorConverter()
-        c888 = (r << 16) | (g << 8) | b 
-        c565 = converter.convert(c888)
-        self.display.framebuffer[y*self.width + x] = c565
+        c888 = '%02x%02x%02x' % (max(0,min(r,255)), max(0,min(g,255)), max(0,min(b,255)))
+        c565 = converter.convert(int(c888, 16))
+        self.buffer[y*self.display.width + x] = c565
         self.display.refresh()
