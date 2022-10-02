@@ -50,8 +50,8 @@ class Matrix:
         tile_rows=1,
         rotation=0,
     ):
-
         panel_height = height // tile_rows
+        self.rotation = rotation
 
         # MatrixPortal M4 Board
         addr_pins = [board.MTX_ADDRA, board.MTX_ADDRB, board.MTX_ADDRC]
@@ -137,5 +137,10 @@ class Matrix:
 
     def setPixel(self, x, y, hex_color):
         color = self.hexTo565(hex_color)
+
+        if self.rotation == 180:
+            x = -1*(x - (self.display.width // 2)) + (self.display.width // 2)
+            y = -1*(y - (self.display.height // 2)) + (self.display.height // 2)
+
         self.buffer[y * self.display.width + x] = color
 
