@@ -73,7 +73,7 @@ class Matrix:
 
         self.buffer = array.array('H') #an unsigned short array (16 bits)
         for i in range(width*height):
-            self.buffer.append(int(0xF800))
+            self.buffer.append(int(0x0000))
 
         # Alternate Address Pins
         if alt_addr_pins is not None:
@@ -130,13 +130,12 @@ class Matrix:
         except ValueError:
             raise RuntimeError("Failed to initialize RGB Matrix") from ValueError
     
-    def rgbTo565(self, r, g, b):
+    def hexTo565(self, hex_color):
         converter = displayio.ColorConverter()
-        c888 = '%02x%02x%02x' % (max(0,min(r,255)), max(0,min(g,255)), max(0,min(b,255)))
-        c565 = converter.convert(int(c888, 16))
+        c565 = converter.convert(int(hex_color, 16))
         return c565
 
-    def setPixel(self, x, y, r, g, b):
-        color = self.rgbTo565(r, g, b)
-        self.buffer[y*self.display.width + x] = color
-        self.display.refresh()
+    def setPixel(self, x, y, hex_color):
+        color = self.hexTo565(hex_color)
+        self.buffer[y * self.display.width + x] = color
+
