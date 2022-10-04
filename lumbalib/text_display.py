@@ -19,8 +19,6 @@ class TextDisplay():
 
         glyph = self.font.get_glyph(ord(l))
         for y in range(glyph.bitmap.height):
-            if not glyph:
-                continue
             for x in range(glyph.bitmap.width):
                 val = glyph.bitmap[x, y]
                 if val > 0:
@@ -30,5 +28,20 @@ class TextDisplay():
                         # CACHING
         self.matrix.display.refresh()
 
-    def drawText(self, l):
-        pass
+    def drawText(self, txt, spacing=1):
+        _, height, _, dy = self.font.get_bounding_box()
+        self.font.load_glyphs(txt)
+
+        dx = 0
+        for i in txt:
+            glyph = self.font.get_glyph(ord(i))
+            for y in range(glyph.bitmap.height):
+                for x in range(glyph.bitmap.width):
+                    val = glyph.bitmap[x,y]
+                    if val > 0:
+                        self.matrix.setPixel(dx + x, y, self.font_color)
+            dx += glyph.bitmap.width
+            dx += spacing
+
+        self.matrix.display.refresh()
+
