@@ -139,8 +139,9 @@ class Matrix:
         color = self.hexTo565(hex_color)
 
         if self.rotation == 180:
-            x = -1*(x - (self.display.width // 2)) + (self.display.width // 2)
-            y = -1*(y - (self.display.height // 2)) + (self.display.height // 2)
+            x = -1*(x - (self.display.width // 2 - 1)) + (self.display.width // 2 - 1)
+            y = -1*(y - (self.display.height // 2 - 1)) + (self.display.height // 2 - 1)
 
-        self.buffer[y * self.display.width + x] = color
+        if 0 <= x < self.display.width and 0 <= y < self.display.height:
+            self.buffer[(y * self.display.width) + x] = color
 
