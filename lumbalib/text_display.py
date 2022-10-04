@@ -28,9 +28,25 @@ class TextDisplay():
                         # CACHING
         self.matrix.display.refresh()
 
-    def drawText(self, txt, spacing=1):
+    def drawText(self, txt, spacing=1, centered=True, posx=0, posy=0, font_color=None):
         _, height, _, dy = self.font.get_bounding_box()
         self.font.load_glyphs(txt)
+
+        if not font_color:
+            font_color = self.font_color
+
+        #DEFAULT CENTERING FEATURE
+        txtWidth = 0
+        txtHeight = 0
+        for i in txt:
+            glyph = self.font.get_glyph(ord(i))
+            txtWidth += glyph.bitmap.width + spacing
+            txtHeight = glyph.bitmap.height
+        txtWidth -= spacing
+
+        if centered:
+            cx = (self.matrix.width // 2 - 1) - txtWidth // 2 
+            cy = (self.matrix.height // 2 - 1) - txtHeight // 2
 
         dx = 0
         for i in txt:
@@ -39,9 +55,11 @@ class TextDisplay():
                 for x in range(glyph.bitmap.width):
                     val = glyph.bitmap[x,y]
                     if val > 0:
-                        self.matrix.setPixel(dx + x, y, self.font_color)
+                        self.matrix.setPixel(cx + posx + dx + x, cy + posy + y, font_color)
             dx += glyph.bitmap.width
             dx += spacing
 
-        self.matrix.display.refresh()
+        #self.matrix.display.refresh()
 
+    def floatingText(self, txt, speed=1, spacing=1):
+        pass
