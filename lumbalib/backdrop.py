@@ -1,32 +1,36 @@
 import random, time
+import colorcon
 
 class StarBackdrop():
-    def __init__(self, matrix):
+    def __init__(self, matrix, delay=100, num_stars=10):
         self.matrix = matrix
         self.autoplay = True
 
         self.stardict = {}
 
-        self.maxstars = 10
+        self.maxstars = num_stars
         self.color = 10
         self.brightness = 255
 
-        self.lastTime
-
-    def rgbToHex(self, r, g, b):
-        return "0x%02x%02x%02x" % (r, g, b)
+        self.lastTime = time.monotonic()
+        self.delay = delay
 
     def updateStars(self):
-        for i in maxstars:
-            sx = random.randint(0, self.matrix.width)
-            sy = random.randint(0, self.matrix.height)
+        if time.monotonic() > self.lastTime + (self.delay / 1000.0):
+            for i in self.stardict.keys():
+                self.matrix.setPixel(i[0], i[1], "0x000000")
+                self.stardict.pop(i)
 
-            if self.matrix.getPixel(sx, sy) > 0:
-                self.stardict[(sx, sy)] = rgbToHex(255, 255, 255)
+            for i in range(self.maxstars):
+                sx = random.randint(0, self.matrix.display.width)
+                sy = random.randint(0, self.matrix.display.height)
 
+                if self.matrix.getPixel(sx, sy) == 0:
+                    self.stardict[(sx, sy)] = colorcon.rgbToHex(255, 255, 255)
 
-        #DONT OVERWRITE TEXT PIXELS
-        return
+            for i in self.stardict.keys():
+                self.matrix.setPixel(i[0], i[1], self.stardict[i])
 
-    
-    
+            self.lastTime = time.monotonic()
+
+        self.matrix.display.refresh()

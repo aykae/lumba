@@ -19,6 +19,7 @@ Implementation Notes
 import board
 import displayio
 import rgbmatrix
+import colorcon
 import array
 
 class Matrix:
@@ -130,13 +131,9 @@ class Matrix:
         except ValueError:
             raise RuntimeError("Failed to initialize RGB Matrix") from ValueError
     
-    def hexTo565(self, hex_color):
-        converter = displayio.ColorConverter()
-        c565 = converter.convert(int(hex_color, 16))
-        return c565
 
     def setPixel(self, x, y, hex_color):
-        color = self.hexTo565(hex_color)
+        color = colorcon.hexTo565(hex_color)
 
         if self.rotation == 180:
             x = -1*(x - (self.display.width // 2 - 1)) + (self.display.width // 2)

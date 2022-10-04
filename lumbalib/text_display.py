@@ -45,8 +45,8 @@ class TextDisplay():
         txtWidth -= spacing
 
         if centered:
-            cx = (self.matrix.width // 2 - 1) - txtWidth // 2 
-            cy = (self.matrix.height // 2 - 1) - txtHeight // 2
+            cx = (self.matrix.display.width // 2 - 1) - txtWidth // 2 
+            cy = (self.matrix.display.height // 2 - 1) - txtHeight // 2
 
         dx = 0
         for i in txt:
