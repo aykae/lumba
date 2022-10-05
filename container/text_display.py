@@ -13,7 +13,9 @@ class TextDisplay():
         self.font = bitmap_font.load_font(font_file)
         self.font_color = font_color
 
-    def drawLetter(self, l):
+        self.lastTime = time.monotonic()
+
+    def drawLetter(self, l, posx=0, posy=0):
         #only height and dy are relevant, because we want the width and dx to vary with character size
         _, height, _, dy = self.font.get_bounding_box()
         self.font.load_glyphs(l)
@@ -23,7 +25,7 @@ class TextDisplay():
             for x in range(glyph.bitmap.width):
                 val = glyph.bitmap[x, y]
                 if val > 0:
-                    self.matrix.setPixel(x, y, self.font_color)
+                    self.matrix.setPixel(posx + x, posy + y, self.font_color)
                     #ALT: FILL DICTIONARY WITH PIXELS TO DRAW,
                         # WON'T SPEED UP THIS FUNCTION, BUT FOR FUTURE
                         # CACHING
@@ -64,3 +66,40 @@ class TextDisplay():
         
         self.drawText(txt, posx=0, posy=dy)
         dy += speed
+
+    def dynamicDrawText(self, txt, delay=500, spacing=1, centered=True, posx=0, posy=0, font_color=None):
+        _, height, _, dy = self.font.get_bounding_box()
+        self.font.load_glyphs(txt)
+
+        if not font_color:
+            font_color = self.font_color
+
+        #DEFAULT CENTERING FEATURE
+        txtWidth = 0
+        txtHeight = 0
+        for i in txt:
+            glyph = self.font.get_glyph(ord(i))
+            txtWidth += glyph.bitmap.width + spacing
+            txtHeight = glyph.bitmap.height
+        txtWidth -= spacing
+
+        if centered:
+            cx = (self.matrix.display.width // 2 - 1) - txtWidth // 2 
+            cy = (self.matrix.display.height // 2 - 1) - txtHeight // 2
+
+        dx = 0
+
+        #CANT BE A FOUR LOOP, HAS TO BE A CLASS VARIABLE
+            #THAT'S INCREMENTED AND MODULUS'D WITH EACH LETTER
+        for i in txt:
+            if time.monotonic() > self.lastTime + (delay / 1000.0):
+                glyph = self.font.get_glyph(ord(i))
+                for y in range(glyph.bitmap.height):
+                    for x in range(glyph.bitmap.width):
+                        val = glyph.bitmap[x,y]
+                        if val > 0:
+                            self.matrix.setPixel(cx + posx + dx + x, cy + posy + y, font_color)
+                dx += glyph.bitmap.width
+                dx += spacing
+
+                self.lastTime = time.monotonic()

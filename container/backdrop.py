@@ -8,7 +8,7 @@ class StarBackdrop():
 
         self.stardict = {}
 
-        self.maxstars = num_stars
+        self.maxStars = num_stars
         self.color = 10
         self.brightness = 255
 
@@ -21,7 +21,7 @@ class StarBackdrop():
                 self.matrix.setPixel(i[0], i[1], "0x000000")
                 self.stardict.pop(i)
 
-            for i in range(self.maxstars):
+            for i in range(self.maxStars):
                 sx = random.randint(0, self.matrix.display.width)
                 sy = random.randint(0, self.matrix.display.height)
 
@@ -32,5 +32,3 @@ class StarBackdrop():
                 self.matrix.setPixel(i[0], i[1], self.stardict[i])
 
             self.lastTime = time.monotonic()
-
-        self.matrix.display.refresh()
