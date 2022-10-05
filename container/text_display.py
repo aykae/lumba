@@ -1,6 +1,5 @@
 from adafruit_bitmap_font import bitmap_font
 
-
 class TextDisplay():
     def __init__(
         self,
@@ -58,8 +57,6 @@ class TextDisplay():
                         self.matrix.setPixel(cx + posx + dx + x, cy + posy + y, font_color)
             dx += glyph.bitmap.width
             dx += spacing
-
-        #self.matrix.display.refresh()
 
     def floatingText(self, txt, speed=1, spacing=1):
         pass
