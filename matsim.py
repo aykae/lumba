@@ -1,16 +1,19 @@
 import pygame
 
-pygame.init()
-
-display = pygame.display
-
-WINDOW_WIDTH = 1000
-WINDOW_HEIGHT = 500
 
 MATRIX_WIDTH = 64
 MATRIX_HEIGHT = 32
-PIXEL_SIZE = 10 
-PIXEL_SPACING = 5 
+PIXEL_SIZE = 12
+PIXEL_SPACING = 2
+
+X_OFFSET = 20
+Y_OFFSET = 20
+
+WINDOW_WIDTH = (MATRIX_WIDTH * (PIXEL_SIZE + PIXEL_SPACING)) + 2 * (X_OFFSET)
+WINDOW_HEIGHT = (MATRIX_HEIGHT * (PIXEL_SIZE + PIXEL_SPACING)) + 2 * (Y_OFFSET)
+
+BG_GRAY = 25
+BG_COLOR = (BG_GRAY, BG_GRAY, BG_GRAY)
 
 def initMatrix():
     dx = 0
@@ -21,7 +24,7 @@ def initMatrix():
         for x in range(WINDOW_WIDTH):
             if px < MATRIX_WIDTH and dx <= x < (dx + PIXEL_SIZE):
                 if py < MATRIX_HEIGHT and dy <= y < (dy + PIXEL_SIZE):
-                    window.set_at((x,y), (0, 0, 0))
+                    window.set_at((x + X_OFFSET, y + Y_OFFSET), ("0x000000"))
             else:
                 #increment x pixel
                 if x - dx == (PIXEL_SIZE + PIXEL_SPACING - 1) and px < MATRIX_WIDTH:
@@ -38,16 +41,33 @@ def initMatrix():
         px = 0
 
     display.flip()
-    print("iT RAN")
+
+def setPixel(x, y, hexcolor):
+    dx = x * (PIXEL_SIZE + PIXEL_SPACING) + X_OFFSET
+    dy = y * (PIXEL_SIZE + PIXEL_SPACING) + Y_OFFSET
+
+    for y in range(PIXEL_SIZE):
+        for x in range(PIXEL_SIZE):
+            window.set_at((dx + x, dy + y), (hexcolor))
+
 ###
 #MAIN LOOP
 ###
 
-window = display.set_mode((1000, 500))
+pygame.init()
+display = pygame.display
+
+window = display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
 running = True
-window.fill((150, 150, 150))
+window.fill(BG_COLOR)
 
 initMatrix()
+
+###
+#MAIN CODE
+###
+setPixel(5, 5, "0xFF0000")
+display.flip()
 
 while running:
     for event in pygame.event.get():
