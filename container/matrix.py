@@ -150,3 +150,10 @@ class Matrix:
         if 0 <= x < self.display.width and 0 <= y < self.display.height:
             return self.buffer[(y * self.display.width) + x]
 
+    def flip(self):
+        self.display.refresh()
+
+    def clear(self):
+        for i in range(self.display.width * self.display.height):
+            self.buffer[i] = int("0x0000", 16)
+            

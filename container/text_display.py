@@ -1,4 +1,6 @@
 from adafruit_bitmap_font import bitmap_font
+import math
+import time
 
 class TextDisplay():
     def __init__(
@@ -25,7 +27,7 @@ class TextDisplay():
                     #ALT: FILL DICTIONARY WITH PIXELS TO DRAW,
                         # WON'T SPEED UP THIS FUNCTION, BUT FOR FUTURE
                         # CACHING
-        self.matrix.display.refresh()
+        self.flip()
 
     def drawText(self, txt, spacing=1, centered=True, posx=0, posy=0, font_color=None):
         _, height, _, dy = self.font.get_bounding_box()
@@ -58,5 +60,7 @@ class TextDisplay():
             dx += glyph.bitmap.width
             dx += spacing
 
-    def floatingText(self, txt, speed=1, spacing=1):
-        pass
+    def floatingText(self, txt, speed=1, amplitude=10, spacing=1):
+        
+        self.drawText(txt, posx=0, posy=dy)
+        dy += speed
