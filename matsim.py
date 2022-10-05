@@ -1,78 +1,74 @@
 import pygame
 
+class MatrixSim:
 
-MATRIX_WIDTH = 64
-MATRIX_HEIGHT = 32
-PIXEL_SIZE = 12
-PIXEL_SPACING = 2
+    BG_GRAY = 25
+    BG_COLOR = (BG_GRAY, BG_GRAY, BG_GRAY)
 
-X_OFFSET = 20
-Y_OFFSET = 20
+    PIXEL_SIZE = 12
+    PIXEL_SPACING = 2
 
-WINDOW_WIDTH = (MATRIX_WIDTH * (PIXEL_SIZE + PIXEL_SPACING)) + 2 * (X_OFFSET)
-WINDOW_HEIGHT = (MATRIX_HEIGHT * (PIXEL_SIZE + PIXEL_SPACING)) + 2 * (Y_OFFSET)
+    X_OFFSET = 20
+    Y_OFFSET = 20
 
-BG_GRAY = 25
-BG_COLOR = (BG_GRAY, BG_GRAY, BG_GRAY)
+    def __init__(self, width, height):
+        pygame.init()
+        self.display = pygame.display
 
-def initMatrix():
-    dx = 0
-    dy = 0
-    px = 0
-    py = 0
-    for y in range(WINDOW_HEIGHT):
-        for x in range(WINDOW_WIDTH):
-            if px < MATRIX_WIDTH and dx <= x < (dx + PIXEL_SIZE):
-                if py < MATRIX_HEIGHT and dy <= y < (dy + PIXEL_SIZE):
-                    window.set_at((x + X_OFFSET, y + Y_OFFSET), ("0x000000"))
-            else:
-                #increment x pixel
-                if x - dx == (PIXEL_SIZE + PIXEL_SPACING - 1) and px < MATRIX_WIDTH:
-                    px += 1
-                    dx += (PIXEL_SIZE + PIXEL_SPACING)
+        self.window = self.display.set_mode((self.window_width, self.window_height))
+        self.window.fill(self.BG_COLOR)
 
-        #increment y pixel
-        if y - dy == (PIXEL_SIZE + PIXEL_SPACING - 1) and py < MATRIX_HEIGHT:
-            py += 1
-            dy += (PIXEL_SIZE + PIXEL_SPACING)
+        self.matrix_width = width
+        self.matrix_height = height
 
-        #reset x vars for next row
+        self.window_width = (self.matrix_width * (self.PIXEL_SIZE + self.PIXEL_SPACING)) + 2 * (self.X_OFFSET)
+        self.window_height = (self.matrix_height * (self.PIXEL_SIZE + self.PIXEL_SPACING)) + 2 * (self.Y_OFFSET)
+
+        self.initMatrix()
+
+    def initMatrix(self):
         dx = 0
+        dy = 0
         px = 0
+        py = 0
+        for y in range(self.window_height):
+            for x in range(self.window_width):
+                if px < self.MATRIX_WIDTH and dx <= x < (dx + self.PIXEL_SIZE):
+                    if py < self.MATRIX_HEIGHT and dy <= y < (dy + self.PIXEL_SIZE):
+                        self.window.set_at((x + self.X_OFFSET, y + self.Y_OFFSET), ("0x000000"))
+                else:
+                    #increment x pixel
+                    if x - dx == (self.PIXEL_SIZE + self.PIXEL_SPACING - 1) and px < self.MATRIX_WIDTH:
+                        px += 1
+                        dx += (self.PIXEL_SIZE + self.PIXEL_SPACING)
 
-    display.flip()
+            #increment y pixel
+            if y - dy == (self.PIXEL_SIZE + self.PIXEL_SPACING - 1) and py < self.MATRIX_HEIGHT:
+                py += 1
+                dy += (self.PIXEL_SIZE + self.PIXEL_SPACING)
 
-def setPixel(x, y, hexcolor):
-    dx = x * (PIXEL_SIZE + PIXEL_SPACING) + X_OFFSET
-    dy = y * (PIXEL_SIZE + PIXEL_SPACING) + Y_OFFSET
+            #reset x vars for next row
+            dx = 0
+            px = 0
 
-    for y in range(PIXEL_SIZE):
-        for x in range(PIXEL_SIZE):
-            window.set_at((dx + x, dy + y), (hexcolor))
+        self.display.flip()
 
-###
-#MAIN LOOP
-###
+    def setPixel(self, x, y, hexcolor):
+        dx = x * (self.PIXEL_SIZE + self.PIXEL_SPACING) + self.X_OFFSET
+        dy = y * (self.PIXEL_SIZE + self.PIXEL_SPACING) + self.Y_OFFSET
 
-pygame.init()
-display = pygame.display
+        for y in range(self.PIXEL_SIZE):
+            for x in range(self.PIXEL_SIZE):
+                self.window.set_at((dx + x, dy + y), (hexcolor))
 
-window = display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
-running = True
-window.fill(BG_COLOR)
+    def flip(self):
+        self.display.flip()
 
-initMatrix()
 
-###
-#MAIN CODE
-###
-setPixel(5, 5, "0xFF0000")
-display.flip()
+# while running:
+#     for event in pygame.event.get():
+#         if event.type == pygame.QUIT:
+#             running = False
 
-while running:
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            running = False
-
-pygame.quit()
-exit()
+# pygame.quit()
+# exit()
