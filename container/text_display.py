@@ -18,7 +18,7 @@ class TextDisplay():
         self.prevDdx = -1 #dynamic dx
         self.lastTimeChar = time.monotonic() #last time character was drawn
         self.lastTimeAni = time.monotonic() #last time animation started
-        self.playingAni = False #currently playing animation
+        self.aniFinished = False #animation finished
 
     def drawLetter(self, l, posx=0, posy=0):
         #only height and dy are relevant, because we want the width and dx to vary with character size
@@ -110,8 +110,7 @@ class TextDisplay():
                 self.ddx = 0
 
     #Dynamic characters of Text
-    def dynamicCharDrawText(self, txt, color1, color2, charDelay=500, aniDelay=1000, spacing=1, centered=True, posx=0, posy=0):
-        _, height, _, dy = self.font.get_bounding_box()
+    def dynamicCharDrawText(self, txt, color1, color2, charDelay=500, aniDelay=3000, spacing=1, centered=True, posx=0, posy=0):
         self.font.load_glyphs(txt)
 
         #DEFAULT CENTERING FEATURE
@@ -129,9 +128,7 @@ class TextDisplay():
 
 
         if time.monotonic() > self.lastTimeAni + (aniDelay / 1000.0):
-
             if time.monotonic() > self.lastTimeChar + (charDelay / 1000.0):
-                
                 #Unhighlight previous character
                 prevChar = (self.currChar - 1) % len(txt)
                 if self.prevDdx >= 0:
@@ -142,33 +139,28 @@ class TextDisplay():
                             if val > 0:
                                 self.matrix.setPixel(cx + posx + self.prevDdx + x, cy + posy + y, color1)
 
-                #Highlight next character
-                glyph = self.font.get_glyph(ord(txt[self.currChar]))
-                for y in range(glyph.bitmap.height):
-                    for x in range(glyph.bitmap.width):
-                        val = glyph.bitmap[x,y]
-                        if val > 0:
-                            self.matrix.setPixel(cx + posx + self.ddx + x, cy + posy + y, color2)
-                self.prevDdx = self.ddx
-                self.ddx += glyph.bitmap.width
-                self.ddx += spacing
+                if not self.aniFinished:
+                    #Highlight next character
+                    glyph = self.font.get_glyph(ord(txt[self.currChar]))
+                    for y in range(glyph.bitmap.height):
+                        for x in range(glyph.bitmap.width):
+                            val = glyph.bitmap[x,y]
+                            if val > 0:
+                                self.matrix.setPixel(cx + posx + self.ddx + x, cy + posy + y, color2)
+                    self.prevDdx = self.ddx
+                    self.ddx += glyph.bitmap.width
+                    self.ddx += spacing
 
-                self.lastTimeChar = time.monotonic()
-                self.currChar = (self.currChar + 1) % len(txt)
-                if self.currChar == 0:
-                    self.ddx = 0
+                    self.lastTimeChar = time.monotonic()
+                    self.currChar = (self.currChar + 1) % len(txt)
+                    if self.currChar == 0:
+                        self.ddx = 0
+                        self.aniFinished = True
+                else:
+                    #Animation finished
                     self.lastTimeAni = time.monotonic()
-                    self.playingAni = False
+                    self.aniFinished = False
 
-                    #animation concluded, unhighlight previous character
-                    prevChar = (self.currChar - 1) % len(txt)
-                    if self.prevDdx >= 0:
-                        glyph = self.font.get_glyph(ord(txt[prevChar]))
-                        for y in range(glyph.bitmap.height):
-                            for x in range(glyph.bitmap.width):
-                                val = glyph.bitmap[x,y]
-                                if val > 0:
-                                    self.matrix.setPixel(cx + posx + self.prevDdx + x, cy + posy + y, color1)
                     
     #Dynamic characters of Text
     def dynamicCharLoopDrawText(self, txt, color1, color2, charDelay=500, spacing=1, centered=True, posx=0, posy=0):
