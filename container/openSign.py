@@ -25,7 +25,7 @@ def signBasicInit():
     td1.drawText('OPEN', posx=0, posy=0, )
 
 def signBasicUpdate():
-    td1.dynamicDrawText('OPEN', posx=0, posy=0, font_color='0xFFFFFF')
+    td1.dynamicCharDrawText('OPEN', posx=0, posy=0, color1='0xFF0000', color2='0xFFFFFF')
 
 ###############
 
@@ -97,5 +97,5 @@ sparklingInit()
 while True:
     sparklingUpdate()
     #floatingUpdate()
-    #signBasicUpdate()
+    signBasicUpdate()
     matrix.flip()

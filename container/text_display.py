@@ -13,6 +13,9 @@ class TextDisplay():
         self.font = bitmap_font.load_font(font_file)
         self.font_color = font_color
 
+        self.currChar = 0
+        self.ddx = 0 #dynamic dx
+        self.prevDdx = -1 #dynamic dx
         self.lastTime = time.monotonic()
 
     def drawLetter(self, l, posx=0, posy=0):
@@ -67,7 +70,8 @@ class TextDisplay():
         self.drawText(txt, posx=0, posy=dy)
         dy += speed
 
-    def dynamicDrawText(self, txt, delay=500, spacing=1, centered=True, posx=0, posy=0, font_color=None):
+    #Dynamic Sequence of Text
+    def dynamicSeqDrawText(self, txt, delay=500, spacing=1, centered=True, posx=0, posy=0, font_color=None):
         _, height, _, dy = self.font.get_bounding_box()
         self.font.load_glyphs(txt)
 
@@ -87,19 +91,65 @@ class TextDisplay():
             cx = (self.matrix.display.width // 2 - 1) - txtWidth // 2 
             cy = (self.matrix.display.height // 2 - 1) - txtHeight // 2
 
-        dx = 0
 
-        #CANT BE A FOUR LOOP, HAS TO BE A CLASS VARIABLE
-            #THAT'S INCREMENTED AND MODULUS'D WITH EACH LETTER
+        if time.monotonic() > self.lastTime + (delay / 1000.0):
+            glyph = self.font.get_glyph(ord(txt[self.currChar]))
+            for y in range(glyph.bitmap.height):
+                for x in range(glyph.bitmap.width):
+                    val = glyph.bitmap[x,y]
+                    if val > 0:
+                        self.matrix.setPixel(cx + posx + self.ddx + x, cy + posy + y, font_color)
+            self.ddx += glyph.bitmap.width
+            self.ddx += spacing
+
+            self.last_time = time.monotonic()
+            self.curr_char = (self.currChar + 1) % len(txt)
+            if self.curr_char == 0:
+                self.ddx = 0
+
+    #Dynamic characters of Text
+    def dynamicCharDrawText(self, txt, color1, color2, delay=500, spacing=1, centered=True, posx=0, posy=0):
+        _, height, _, dy = self.font.get_bounding_box()
+        self.font.load_glyphs(txt)
+
+        #DEFAULT CENTERING FEATURE
+        txtWidth = 0
+        txtHeight = 0
         for i in txt:
-            if time.monotonic() > self.lastTime + (delay / 1000.0):
-                glyph = self.font.get_glyph(ord(i))
+            glyph = self.font.get_glyph(ord(i))
+            txtWidth += glyph.bitmap.width + spacing
+            txtHeight = glyph.bitmap.height
+        txtWidth -= spacing
+
+        if centered:
+            cx = (self.matrix.display.width // 2 - 1) - txtWidth // 2 
+            cy = (self.matrix.display.height // 2 - 1) - txtHeight // 2
+
+
+        if time.monotonic() > self.lastTime + (delay / 1000.0):
+            
+            #Unhighlight previous character
+            prevChar = (self.currChar - 1) % len(txt)
+            if self.prevDdx >= 0:
+                glyph = self.font.get_glyph(ord(txt[prevChar]))
                 for y in range(glyph.bitmap.height):
                     for x in range(glyph.bitmap.width):
                         val = glyph.bitmap[x,y]
                         if val > 0:
-                            self.matrix.setPixel(cx + posx + dx + x, cy + posy + y, font_color)
-                dx += glyph.bitmap.width
-                dx += spacing
+                            self.matrix.setPixel(cx + posx + self.prevDdx + x, cy + posy + y, color1)
 
-                self.lastTime = time.monotonic()
+            #Highlight next character
+            glyph = self.font.get_glyph(ord(txt[self.currChar]))
+            for y in range(glyph.bitmap.height):
+                for x in range(glyph.bitmap.width):
+                    val = glyph.bitmap[x,y]
+                    if val > 0:
+                        self.matrix.setPixel(cx + posx + self.ddx + x, cy + posy + y, color2)
+            self.prevDdx = self.ddx
+            self.ddx += glyph.bitmap.width
+            self.ddx += spacing
+
+            self.lastTime = time.monotonic()
+            self.currChar = (self.currChar + 1) % len(txt)
+            if self.currChar == 0:
+                self.ddx = 0
