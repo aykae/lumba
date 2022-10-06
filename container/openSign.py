@@ -7,58 +7,30 @@ WIDTH = 64
 HEIGHT = 32	
 matrix = Matrix(width=WIDTH, height=HEIGHT, rotation=180)
 
+# COLOR THEMES
+# (base_)
+SHADOW = '0xFFFFFF'
+BASIC = ('0xFF0000', '0xFFFFFF')
+HALLOWEEN = ('0xFF7400', '0x6D0063')
+CHRISTMAS = ('0x623004', '0x0B601C')
+
 ############################
 #
-# SPARKLING OPEN
+# OPEN SIGN
 #
 
-###############
-
-def signBasicInit():
+def openInit(theme=BASIC):
     global td1
 
     font1 = 'fonts/IBMPlexMono-Bold-29.bdf'
-    td1 = TextDisplay(matrix, font1, '0xFF0000')
+    td1 = TextDisplay(matrix, font1, theme[0])
     #td2 = TextDisplay(matrix, font2, '0xFF0000')
 
-    td1.drawText('OPEN', posx=1, posy=1, font_color='0xFFFFFF')
-    td1.drawText('OPEN', posx=0, posy=0, )
+    td1.drawText('OPEN', posx=1, posy=1, spacing=2, font_color=SHADOW)
+    td1.drawText('OPEN', posx=0, posy=0, spacing=2 )
 
-def signBasicUpdate():
-    td1.dynamicCharDrawText('OPEN', posx=0, posy=0, color1='0xFF0000', color2='0xFFFFFF')
-
-###############
-
-def signHalloweenInit():
-    font1 = 'fonts/IBMPlexMono-Bold-29.bdf'
-    orange = '0xFF7400'
-    #orange = '0xF79D08'
-    purple = '0x6D0063'
-    td = TextDisplay(matrix, font1, orange)
-
-    td.drawText('OPEN', posx=1, posy=1, font_color=purple)
-    td.drawText('OPEN', posx=0, posy=0)
-
-###############
-
-def signThanksgivingInit():
-    font1 = 'fonts/IBMPlexMono-Bold-29.bdf'
-    yellow = '0xEBBA38'
-    red = '0x623004'
-    td = TextDisplay(matrix, font1, yellow)
-
-    td.drawText('OPEN', posx=1, posy=1, font_color=red)
-    td.drawText('OPEN', posx=0, posy=0)
-
-def signChristmasInit():
-    font1 = 'fonts/IBMPlexMono-Bold-29.bdf'
-    red = '0x623004'
-    green = '0x0B601C'
-    td = TextDisplay(matrix, font1, red)
-
-    td.drawText('OPEN', posx=1, posy=1, font_color=green)
-    td.drawText('OPEN', posx=0, posy=0)
-
+def openUpdate(theme=BASIC):
+    td1.dynamicCharDrawText('OPEN', posx=0, posy=0, spacing=2, charDelay=300, color1=theme[0], color2=theme[1])
 
 def sparklingInit():
     global stars, font, td
@@ -90,12 +62,12 @@ def floatingUpdate():
 
     ftime += 0.5
 
-
-signBasicInit()
+theme=BASIC
+openInit(theme)
 sparklingInit()
 #floatingInit()
 while True:
     sparklingUpdate()
     #floatingUpdate()
-    signBasicUpdate()
+    openUpdate(theme)
     matrix.flip()
