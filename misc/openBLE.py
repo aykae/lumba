@@ -2,7 +2,7 @@
 # Created by AK, Lumba Technologies
 
 from adafruit_ble import BLERadio
-from adafriut_ble.advertising.standard import ProvideServicesAdvertisement
+from adafruit_ble.advertising.standard import ProvideServicesAdvertisement
 from adafruit_ble.services.nordic import UARTService
 from adafruit_airlift.esp32 import ESP32
 
@@ -14,7 +14,11 @@ uart = UARTService()
 advert = ProvideServicesAdvertisement(uart)
 
 while True:
-    ble.stop_advertising(advert)
+    try:
+        ble.stop_advertising()
+    except:
+        pass
+
     ble.start_advertising(advert)
     print("Attempting to connect...")
 
@@ -25,7 +29,7 @@ while True:
     while ble.connected:
         txt = ""
         byte = uart.read(1).decode()
-        while byte != "\n":
+        while byte != "\n" and ble.connected:
             txt += byte
             byte = uart.read(1).decode()
 
