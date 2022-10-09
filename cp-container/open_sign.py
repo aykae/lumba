@@ -1,6 +1,7 @@
 from matrix import Matrix
 from text_display import TextDisplay
 from backdrop import StarBackdrop
+from open_ble import BluetoothReceiver
 import math, time
 
 WIDTH = 64
@@ -62,11 +63,23 @@ def floatingUpdate():
 
     ftime += 0.5
 
+###############
+## MAIN CODE ##
+###############
+
+btr = BluetoothReceiver()
+
 theme=BASIC
 openInit(theme)
 sparklingInit()
 #floatingInit()
+
 while True:
+
+    #MATRIX BT UPDATE NEEDS TO BE EVERY LOOPA
+    #only listen if connection is established
+    #if br.hasCommand, execute it and set it to False
+
     sparklingUpdate()
     #floatingUpdate()
     openUpdate(theme)
