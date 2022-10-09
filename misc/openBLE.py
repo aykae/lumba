@@ -21,11 +21,12 @@ while True:
 
     ble.start_advertising(advert)
     print("Attempting to connect...")
+    print(uart.uuid)
 
     while not ble.connected:
         pass
     print("Connection Successful. Waiting for instruction...")
-
+    
     while ble.connected:
         txt = ""
         byte = uart.read(1).decode()

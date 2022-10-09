@@ -22,15 +22,18 @@
         <button type="submit">Update Sign</button>
     </form>
 
+    <br>
+    <button id="disconnect-btn">Disconnect Device</button>
+
     <!-- Event Listeners -->
     <script>
         document.getElementById("connect-btn").addEventListener("click", function(event) {
             event.preventDefault();
 
-            console.log('AK: button pressed');
+            console.log("AK: connection attempted");
 
             if (isWebBluetoothEnabled()) {
-                onButtonClick();
+                onConnect();
             }
         });
 
@@ -40,7 +43,17 @@
             console.log('AK: form submitted');
 
             if (isWebBluetoothEnabled()) {
-                onButtonClick();
+                onUpdate();
+            }
+        });
+
+        document.getElementById("disconnect-btn").addEventListener("click", function(event) {
+            event.preventDefault();
+
+            console.log('AK: disconnect attempted');
+
+            if (isWebBluetoothEnabled()) {
+                onDisconnect();
             }
         });
     </script>
@@ -49,11 +62,11 @@
     <script>
         function isWebBluetoothEnabled() {
             if (navigator.bluetooth) {
-            return true;
+                return true;
             } else {
-            console.log('Web Bluetooth API is not available.\n' +
+                console.log('Web Bluetooth API is not available.\n' +
                 'Please make sure the "Experimental Web Platform features" flag is enabled.');
-            return false;
+                return false;
             }
         }
     </script>
