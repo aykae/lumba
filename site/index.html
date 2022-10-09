@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<head>
+    <title>LUMBA CONNECT</title>
+    <script src="app.js"></script>
+</head>
+
+<body style="text-align: center;">
+    <br>
+    <h1>LUMBA CONNECT</h1>
+    <button id="connect-btn">Connect to Device</button>
+    <br>
+
+    <br>
+    <hr></hr>
+    <br>
+
+    <form id="sign-update">
+        <label for="command">Customize Your OpenUp Sign:</label>
+        <br>
+        <input type="text" id="command" name="command">
+        <br><br>
+        <button type="submit">Update Sign</button>
+    </form>
+
+    <!-- Event Listeners -->
+    <script>
+        document.getElementById("connect-btn").addEventListener("click", function(event) {
+            event.preventDefault();
+
+            console.log('AK: button pressed');
+
+            if (isWebBluetoothEnabled()) {
+                onButtonClick();
+            }
+        });
+
+        document.getElementById("sign-update").addEventListener("submit", function(event) {
+            event.preventDefault();
+
+            console.log('AK: form submitted');
+
+            if (isWebBluetoothEnabled()) {
+                onButtonClick();
+            }
+        });
+    </script>
+
+    <!-- Helper Functions -->
+    <script>
+        function isWebBluetoothEnabled() {
+            if (navigator.bluetooth) {
+            return true;
+            } else {
+            console.log('Web Bluetooth API is not available.\n' +
+                'Please make sure the "Experimental Web Platform features" flag is enabled.');
+            return false;
+            }
+        }
+    </script>
+</body>
