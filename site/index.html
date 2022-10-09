@@ -24,6 +24,13 @@
 
     <br>
     <button id="disconnect-btn">Disconnect Device</button>
+    <br>
+
+    <!-- TESTING AREA -->
+    <br>
+    <button id="request-btn">Request</button>
+    <br>
+    <button id="connect-devices-btn">Connect</button>
 
     <!-- Event Listeners -->
     <script>
@@ -54,6 +61,27 @@
 
             if (isWebBluetoothEnabled()) {
                 onDisconnect();
+            }
+        });
+
+        /* TESTING AREA */
+        document.getElementById("request-btn").addEventListener("click", function(event) {
+            event.preventDefault();
+
+            console.log('AK: request attempted');
+
+            if (isWebBluetoothEnabled()) {
+                onRequestBluetoothDeviceButtonClick();
+            }
+        });
+
+        document.getElementById("connect-devices-btn").addEventListener("click", function(event) {
+            event.preventDefault();
+
+            console.log('AK: connect devices attempted');
+
+            if (isWebBluetoothEnabled()) {
+                onConnectToBluetoothDevicesButtonClick();
             }
         });
     </script>
