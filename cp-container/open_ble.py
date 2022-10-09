@@ -29,16 +29,13 @@ class BluetoothReceiver:
 
     def checkConnection(self):
         if not self.isConnected:
-            #print("Attempting to connect...")
-
             if self.ble.connected:
                 self.isConnected = True
-
-            print("Connection Successful. Waiting for command...")
+                print("Connection Successful. Waiting for command...")
         else:
             if not self.ble.connected:
                 self.isConnected = False
-                print("Connection Lost. Waiting for command...")
+                print("Connection Lost. Come back soon.")
 
 
     def listen(self):

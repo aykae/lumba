@@ -63,22 +63,40 @@ def floatingUpdate():
 
     ftime += 0.5
 
+def btInit():
+    global btr
+
+    btr = BluetoothReceiver()
+    btr.allowConnection()
+
+def btUpdate():
+    if btr.ble.connected:
+
+        btr.checkConnection() #this may be redundant
+        while btr.isConnected:
+            btr.listen()
+            if btr.hasCommand:
+                print(btr.command)
+                #do something with command
+                btr.command = ""
+                btr.hasCommand = False
+            btr.checkConnection()
+
+        #Allow for reconnection after disconnect
+        btr.allowConnection()
+
 ###############
 ## MAIN CODE ##
 ###############
 
-btr = BluetoothReceiver()
-
+btInit()
 theme=BASIC
 openInit(theme)
 sparklingInit()
 #floatingInit()
 
 while True:
-
-    #MATRIX BT UPDATE NEEDS TO BE EVERY LOOPA
-    #only listen if connection is established
-    #if br.hasCommand, execute it and set it to False
+    btUpdate()
 
     sparklingUpdate()
     #floatingUpdate()
