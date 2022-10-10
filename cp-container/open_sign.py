@@ -15,23 +15,29 @@ BASIC = ('0xFF0000', '0xFFFFFF')
 HALLOWEEN = ('0xFF7400', '0x6D0063')
 CHRISTMAS = ('0x623004', '0x0B601C')
 
-############################
+# BOOLS
+sparkleOn = True
+
+# VARS
+theme = BASIC
+
+################################
 #
 # OPEN SIGN
 #
 
 def openInit(theme=BASIC):
-    global td1
+    global td
 
-    font1 = 'fonts/IBMPlexMono-Bold-29.bdf'
-    td1 = TextDisplay(matrix, font1, theme[0])
+    font = 'fonts/IBMPlexMono-Bold-29.bdf'
+    td = TextDisplay(matrix, font, theme[0])
     #td2 = TextDisplay(matrix, font2, '0xFF0000')
 
-    td1.drawText('OPEN', posx=1, posy=1, spacing=2, font_color=SHADOW)
-    td1.drawText('OPEN', posx=0, posy=0, spacing=2 )
+    td.drawText('OPEN', posx=1, posy=1, spacing=2, font_color=theme[1])
+    td.drawText('OPEN', posx=0, posy=0, spacing=2 )
 
 def openUpdate(theme=BASIC):
-    td1.dynamicCharDrawText('OPEN', posx=0, posy=0, spacing=2, charDelay=300, color1=theme[0], color2=theme[1])
+    td.dynamicCharDrawText('OPEN', posx=0, posy=0, spacing=2, charDelay=300, color1=theme[0], color2=theme[1])
 
 def sparklingInit():
     global stars, font, td
@@ -78,12 +84,34 @@ def btUpdate():
             if btr.hasCommand:
                 print(btr.command)
                 #do something with command
+
+                executeCommand()
+
                 btr.command = ""
                 btr.hasCommand = False
             btr.checkConnection()
 
         #Allow for reconnection after disconnect
         btr.allowConnection()
+
+def executeCommand():
+    global theme, sparkleOn
+
+    c = btr.command.upper()
+
+    if c == "BA":
+        theme = BASIC
+    elif c == "HW":
+        theme = HALLOWEEN
+    elif c == "XS":
+        theme = CHRISTMAS
+    elif c == "S":
+        sparkleOn = True
+    elif c == "NS":
+        sparkleOn = False
+    
+    matrix.clear()
+    openInit(theme)
 
 ###############
 ## MAIN CODE ##
@@ -98,7 +126,8 @@ sparklingInit()
 while True:
     btUpdate()
 
-    sparklingUpdate()
+    if sparkleOn:
+        sparklingUpdate()
     #floatingUpdate()
     openUpdate(theme)
     matrix.flip()
