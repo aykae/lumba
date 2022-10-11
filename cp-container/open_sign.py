@@ -32,12 +32,14 @@ def openInit(theme=BASIC):
     font = 'fonts/IBMPlexMono-Bold-29.bdf'
     td = TextDisplay(matrix, font, theme[0])
     #td2 = TextDisplay(matrix, font2, '0xFF0000')
+    td.loadText('OPEN')
 
     td.drawText('OPEN', posx=1, posy=1, spacing=2, font_color=theme[1])
     td.drawText('OPEN', posx=0, posy=0, spacing=2 )
 
 def openUpdate(theme=BASIC):
-    td.dynamicCharDrawText('OPEN', posx=0, posy=0, spacing=2, charDelay=300, color1=theme[0], color2=theme[1])
+    td.dynamicChar('OPEN', posx=0, posy=0, spacing=2, charDelay=300, aniDelay=0, color1=theme[0], color2=theme[1])
+
 
 def sparklingInit():
     global stars, font, td
