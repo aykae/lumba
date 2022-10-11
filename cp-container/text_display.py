@@ -158,50 +158,36 @@ class TextDisplay():
 
     #Dynamic characters of Text
     def dynamicChar(self, txt, color1, color2, charDelay=500, aniDelay=3000, spacing=1, centered=True, posx=0, posy=0):
-        self.font.load_glyphs(txt)
-
-        #DEFAULT CENTERING FEATURE
-        txtWidth = 0
-        txtHeight = 0
-        for i in txt:
-            glyph = self.font.get_glyph(ord(i))
-            txtWidth += glyph.bitmap.width + spacing
-            txtHeight = glyph.bitmap.height
-        txtWidth -= spacing
+        
+        buff_txt = self.buffer[txt]
 
         if centered:
-            cx = (self.matrix.display.width // 2 - 1) - txtWidth // 2 
-            cy = (self.matrix.display.height // 2 - 1) - txtHeight // 2
-
+            (cx, cy) = buff_txt['center']
+        else:
+            (cx, cy) = (0, 0)
+        buff_txt.pop('center')
 
         if time.monotonic() > self.lastTimeAni + (aniDelay / 1000.0):
             if time.monotonic() > self.lastTimeChar + (charDelay / 1000.0):
+                
+                #ADD BOOLEAN TO PREVENT FIRST UNNECESSARY UNHIGHLIGHT
                 #Unhighlight previous character
                 prevChar = (self.currChar - 1) % len(txt)
-                if self.prevDdx >= 0:
-                    glyph = self.font.get_glyph(ord(txt[prevChar]))
-                    for y in range(glyph.bitmap.height):
-                        for x in range(glyph.bitmap.width):
-                            val = glyph.bitmap[x,y]
-                            if val > 0:
-                                self.matrix.setPixel(cx + posx + self.prevDdx + x, cy + posy + y, color1)
+
+
+                #if self.prevDdx >= 0:
+                ch = txt[self.prevChar]
+                for p in buff_txt[ch]:
+                    self.matrix.setPixel(cx + posx + p[0], cy + posy + p[1], color1)
 
                 if not self.aniFinished:
-                    #Highlight next character
-                    glyph = self.font.get_glyph(ord(txt[self.currChar]))
-                    for y in range(glyph.bitmap.height):
-                        for x in range(glyph.bitmap.width):
-                            val = glyph.bitmap[x,y]
-                            if val > 0:
-                                self.matrix.setPixel(cx + posx + self.ddx + x, cy + posy + y, color2)
-                    self.prevDdx = self.ddx
-                    self.ddx += glyph.bitmap.width
-                    self.ddx += spacing
+                    ch = txt[self.currChar]
+                    for p in buff_txt[ch]:
+                        self.matrix.setPixel(cx + posx + p[0], cy + posy + p[1], color2)
 
                     self.lastTimeChar = time.monotonic()
                     self.currChar = (self.currChar + 1) % len(txt)
                     if self.currChar == 0:
-                        self.ddx = 0
                         self.aniFinished = True
                 else:
                     #Animation finished
