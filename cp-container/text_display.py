@@ -25,7 +25,14 @@ class TextDisplay():
 
         self.aniFinished = False #animation finished
 
-    def loadText(self, txt):
+    def loadText(self, txt, spacing=2):
+        # Adds text to buffer with following specs
+        # dict( text -> 
+        #    dict( char -> list of pixel tuples,
+        #         "center" -> (cx, cy)
+        #        )
+        # )
+
         if txt not in buffer.keys():
             txtWidth = 0
             txtHeight = 0
@@ -57,8 +64,7 @@ class TextDisplay():
             cy = (self.matrix.display.height // 2 - 1) - txtHeight // 2
 
             #add center to buffer for later use
-            self.buffer[txt]["cx"] = cx
-            self.buffer[txt]["cy"] = cy
+            self.buffer[txt]["center"] = (cx, cy)
         else:
             print(txt + " has already been loaded.")
 

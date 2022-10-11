@@ -32,7 +32,7 @@ def openInit(theme=BASIC):
     font = 'fonts/IBMPlexMono-Bold-29.bdf'
     td = TextDisplay(matrix, font, theme[0])
     #td2 = TextDisplay(matrix, font2, '0xFF0000')
-    td.loadText('OPEN')
+    td.loadText('OPEN', spacing=2)
 
     td.drawText('OPEN', posx=1, posy=1, spacing=2, font_color=theme[1])
     td.drawText('OPEN', posx=0, posy=0, spacing=2 )
