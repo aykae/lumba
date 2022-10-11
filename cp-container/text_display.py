@@ -13,7 +13,7 @@ class TextDisplay():
         self.font = bitmap_font.load_font(font_file)
         self.font_color = font_color
 
-        self.buffer = []
+        self.buffer = {}
 
         self.currChar = 0
         self.ddx = 0 #dynamic dx
@@ -25,8 +25,42 @@ class TextDisplay():
 
         self.aniFinished = False #animation finished
 
-    def loadText():
-        pass
+    def loadText(self, txt):
+        if txt not in buffer.keys():
+            txtWidth = 0
+            txtHeight = 0
+
+            empty_dict = {}
+            self.buffer[txt] = empty_dict
+            
+            dx = 0
+            for i in txt:
+                empty_list = []
+                self.buffer[txt][i] = empty_list
+                glyph = self.font.get_glyph(ord(i))
+                for y in range(glyph.bitmap.height):
+                    for x in range(glyph.bitmap.width):
+                        val = glyph.bitmap[x,y]
+                        if val > 0:
+                            self.buffer[txt][i].append((dx + x, y))
+                dx += glyph.bitmap.width
+                dx += spacing
+
+                #calculate cumulative width and height
+                glyph = self.font.get_glyph(ord(i))
+                txtWidth += glyph.bitmap.width + spacing
+                txtHeight = max(txtHeight, glyph.bitmap.height) #get greatest hight
+
+            #calculate center of text
+            txtWidth -= spacing
+            cx = (self.matrix.display.width // 2 - 1) - txtWidth // 2 
+            cy = (self.matrix.display.height // 2 - 1) - txtHeight // 2
+
+            #add center to buffer for later use
+            self.buffer[txt]["cx"] = cx
+            self.buffer[txt]["cy"] = cy
+        else:
+            print(txt + " has already been loaded.")
 
 
     def drawLetter(self, l, posx=0, posy=0):
