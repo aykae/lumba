@@ -16,13 +16,12 @@ class TextDisplay():
         self.buffer = {}
 
         self.currChar = 0
-        self.ddx = 0 #dynamic dx
-        self.prevDdx = -1 #dynamic dx
 
         self.lastTime = time.monotonic()
         self.lastTimeChar = time.monotonic() #last time character was drawn
         self.lastTimeAni = time.monotonic() #last time animation started
 
+        self.aniStarted = False #animation started
         self.aniFinished = False #animation finished
 
     def loadText(self, txt, spacing=2):
@@ -167,17 +166,17 @@ class TextDisplay():
         if time.monotonic() > self.lastTimeAni + (aniDelay / 1000.0):
             if time.monotonic() > self.lastTimeChar + (charDelay / 1000.0):
                 
-                #ADD BOOLEAN TO PREVENT FIRST UNNECESSARY UNHIGHLIGHT
                 #Unhighlight previous character
                 prevChar = (self.currChar - 1) % len(txt)
 
-
-                #if self.prevDdx >= 0:
-                ch = txt[prevChar]
-                for p in buff_txt[ch]:
-                    self.matrix.setPixel(cx + posx + p[0], cy + posy + p[1], color1)
+                if self.aniStarted:
+                    ch = txt[prevChar]
+                    for p in buff_txt[ch]:
+                        self.matrix.setPixel(cx + posx + p[0], cy + posy + p[1], color1)
 
                 if not self.aniFinished:
+                    self.aniStarted = True
+
                     ch = txt[self.currChar]
                     for p in buff_txt[ch]:
                         self.matrix.setPixel(cx + posx + p[0], cy + posy + p[1], color2)
@@ -190,3 +189,4 @@ class TextDisplay():
                     #Animation finished
                     self.lastTimeAni = time.monotonic()
                     self.aniFinished = False
+                    self.aniStarted = False

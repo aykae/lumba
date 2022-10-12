@@ -123,13 +123,11 @@ btInit()
 theme=BASIC
 openInit(theme)
 sparklingInit()
-#floatingInit()
 
 while True:
     btUpdate()
 
     if sparkleOn:
         sparklingUpdate()
-    #floatingUpdate()
     openUpdate(theme)
     matrix.flip()
