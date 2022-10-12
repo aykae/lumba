@@ -16,7 +16,8 @@ HALLOWEEN = ('0xFF7400', '0x6D0063')
 CHRISTMAS = ('0x623004', '0x0B601C')
 
 # BOOLS
-sparkleOn = True
+isSparkling = True
+isSignOn = True
 
 # VARS
 theme = BASIC
@@ -38,11 +39,11 @@ def openInit(theme=BASIC):
     td.drawText('OPEN', posx=0, posy=0, spacing=2 )
 
 def openUpdate(theme=BASIC):
-    td.dynamicChar('OPEN', posx=0, posy=0, spacing=2, charDelay=350, aniDelay=2000, color1=theme[0], color2=theme[1])
+    td.dynamicChar('OPEN', posx=0, posy=0, spacing=2, charDelay=350, aniDelay=2500, color1=theme[0], color2=theme[1])
 
 
 def sparklingInit():
-    global stars, font, td
+    global stars
 
     stars = StarBackdrop(matrix, delay=50, num_stars=25)
 
@@ -97,7 +98,7 @@ def btUpdate():
         btr.allowConnection()
 
 def executeCommand():
-    global theme, sparkleOn
+    global theme, isSparkling, isSignOn
 
     c = btr.command.upper()
 
@@ -108,12 +109,17 @@ def executeCommand():
     elif c == "XS":
         theme = CHRISTMAS
     elif c == "S":
-        sparkleOn = True
+        isSparkling = True
     elif c == "NS":
-        sparkleOn = False
+        isSparkling = False
+    elif c == "OFF":
+        isSignOn = False
+    elif c == "ON":
+        isSignOn = True 
     
     matrix.clear()
-    openInit(theme)
+    if isSignOn:
+        openInit(theme)
 
 ###############
 ## MAIN CODE ##
@@ -127,7 +133,9 @@ sparklingInit()
 while True:
     btUpdate()
 
-    if sparkleOn:
-        sparklingUpdate()
-    openUpdate(theme)
-    matrix.flip()
+    if isSignOn:
+        openUpdate(theme)
+        if isSparkling:
+            sparklingUpdate()
+
+        matrix.flip()
