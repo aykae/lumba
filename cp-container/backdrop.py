@@ -16,6 +16,8 @@ class StarBackdrop():
         self.delay = delay
 
     def updateStars(self):
+        #OPT: calculate next stars in delay gaps
+
         if time.monotonic() > self.lastTime + (self.delay / 1000.0):
             for i in self.stardict.keys():
                 self.matrix.setPixel(i[0], i[1], "0x000000")

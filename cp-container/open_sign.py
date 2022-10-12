@@ -120,6 +120,8 @@ def executeCommand():
     matrix.clear()
     if isSignOn:
         openInit(theme)
+        openUpdate(theme)
+    matrix.flip()
 
 ###############
 ## MAIN CODE ##
