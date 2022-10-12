@@ -38,7 +38,7 @@ def openInit(theme=BASIC):
     td.drawText('OPEN', posx=0, posy=0, spacing=2 )
 
 def openUpdate(theme=BASIC):
-    td.dynamicChar('OPEN', posx=0, posy=0, spacing=2, charDelay=300, aniDelay=0, color1=theme[0], color2=theme[1])
+    td.dynamicChar('OPEN', posx=0, posy=0, spacing=2, charDelay=350, aniDelay=2000, color1=theme[0], color2=theme[1])
 
 
 def sparklingInit():

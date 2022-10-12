@@ -33,7 +33,7 @@ class TextDisplay():
         #        )
         # )
 
-        if txt not in buffer.keys():
+        if txt not in self.buffer.keys():
             txtWidth = 0
             txtHeight = 0
 
@@ -92,14 +92,12 @@ class TextDisplay():
             font_color = self.font_color
 
         buff_txt = self.buffer[txt]
-
         if centered:
             (cx, cy) = buff_txt['center']
         else:
             (cx, cy) = (0, 0)
-        buff_txt.pop('center')
 
-        for ch in buff_txt.keys():
+        for ch in txt:
             for p in buff_txt[ch]:
                 self.matrix.setPixel(cx + posx + p[0], cy + posy + p[1], font_color)
 
@@ -165,7 +163,6 @@ class TextDisplay():
             (cx, cy) = buff_txt['center']
         else:
             (cx, cy) = (0, 0)
-        buff_txt.pop('center')
 
         if time.monotonic() > self.lastTimeAni + (aniDelay / 1000.0):
             if time.monotonic() > self.lastTimeChar + (charDelay / 1000.0):
@@ -176,7 +173,7 @@ class TextDisplay():
 
 
                 #if self.prevDdx >= 0:
-                ch = txt[self.prevChar]
+                ch = txt[prevChar]
                 for p in buff_txt[ch]:
                     self.matrix.setPixel(cx + posx + p[0], cy + posy + p[1], color1)
 
