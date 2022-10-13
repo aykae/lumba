@@ -21,6 +21,7 @@ isSignOn = True
 
 # VARS
 theme = BASIC
+ftime = 0
 
 ################################
 #
@@ -49,28 +50,6 @@ def sparklingInit():
 
 def sparklingUpdate():
     stars.updateStars()
-
-############################
-#
-# FLOATING OPEN
-#
-
-ftime = 0
-def floatingInit():
-    global td, text
-
-    text = "OPEN"
-    font = 'fonts/IBMPlexMono-Bold-75.bdf'
-    td = TextDisplay(matrix, font, '0xFF0000')
-
-
-def floatingUpdate():
-    global ftime
-
-    dy = int(8 * math.sin(ftime))
-    td.drawText(text, posy=dy)
-
-    ftime += 0.5
 
 def btInit():
     global btr

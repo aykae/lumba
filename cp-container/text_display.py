@@ -101,9 +101,8 @@ class TextDisplay():
                 self.matrix.setPixel(cx + posx + p[0], cy + posy + p[1], font_color)
 
     def floatingText(self, txt, speed=1, amplitude=10, spacing=1):
-        
         self.drawText(txt, posx=0, posy=dy)
-        dy += speed
+        dy = int(8 * math.sin(time.monotonic()))
 
     #Dynamic characters of text no delay in between
     #Remove once dynamicCharDrawText optimized, since aniDelay=0 yields same effect
