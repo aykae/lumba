@@ -100,7 +100,11 @@ def executeCommand():
     if isSignOn:
         openInit(theme)
         openUpdate(theme)
+
     matrix.flip()
+
+    #notify user of successful command
+    btr.ackCommand(c)
 
 ###############
 ## MAIN CODE ##

@@ -44,7 +44,26 @@ class BluetoothReceiver:
             self.command += byte
         else:
             self.hasCommand = True
+
+    #acknowledge that command was executed.        
+    def ackCommand(self, command):
+        msg = ""
+        if c == "BA":
+            msg = "Color scheme switched to Basic."
+        elif c == "HW":
+            msg = "Color scheme switched to Halloween."
+        elif c == "XS":
+            msg = "Color scheme switched to Christmas."
+        elif c == "S":
+            msg = "Sparkling animation was enabled."
+        elif c == "NS":
+            msg = "Sparkling animation was disabled."
+        elif c == "OFF":
+            msg = "Sign was switched off."
+        elif c == "ON":
+            msg = "Sign was switched on."
         
+        self.uart.write(msg)
 
 
 
