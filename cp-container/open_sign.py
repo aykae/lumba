@@ -2,7 +2,7 @@ from matrix import Matrix
 from text_display import TextDisplay
 from backdrop import StarBackdrop
 from open_ble import BluetoothReceiver
-import math, time
+import math, time, json
 
 WIDTH = 64
 HEIGHT = 32	
@@ -30,6 +30,14 @@ ftime = 0
 
 def openInit(theme=BASIC):
     global td
+
+    #load state from file
+    with open('state.txt', 'r') as state:
+        temp_dict = json.loads(state)
+        #temp_keys = temp_dict.keys()
+
+        theme = temp_dict["theme"]
+        isSparkling = temp_dict["isSparkling"]
 
     font = 'fonts/IBMPlexMono-Bold-29.bdf'
     td = TextDisplay(matrix, font, theme[0])
@@ -105,6 +113,14 @@ def executeCommand():
 
     #notify user of successful command
     btr.ackCommand(c)
+
+    #write new state to file
+    with open('state.txt', 'w') as state:
+        temp_dict = {}
+        temp_dict["theme"] = theme
+        temp_dict["isSparkling"] = isSparkling
+
+        state.write(json.dumps(temp_dict))
 
 ###############
 ## MAIN CODE ##
