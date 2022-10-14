@@ -51,7 +51,8 @@ class BluetoothReceiver:
 
         msg = ""
         if c == "?" or c == "HELP" or c == "MENU":
-            msg = "Here are your available commands:"
+            msg = "Here are your available commands: \n"
+            msg += "\t \n"
         if c == "BA":
             msg = "Color scheme switched to Basic."
         elif c == "HW":
@@ -75,6 +76,8 @@ class BluetoothReceiver:
             msg = "Sign was switched off."
         elif c == "ON":
             msg = "Sign was switched on."
+        else:
+            msg = "Invalid command."
 
         msg += "\n" 
         self.uart.write(msg)
