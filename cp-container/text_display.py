@@ -40,20 +40,23 @@ class TextDisplay():
             self.buffer[txt] = empty_dict
             
             dx = 0
-            for i in txt:
+            for i in range(len(txt)):
+                ch = txt[i]
                 empty_list = []
-                self.buffer[txt][i] = empty_list
-                glyph = self.font.get_glyph(ord(i))
+                chHash = ch + str(i) # char + pos, to distinguish duplicate letters
+                self.buffer[txt][chHash] = empty_list
+
+                glyph = self.font.get_glyph(ord(ch))
                 for y in range(glyph.bitmap.height):
                     for x in range(glyph.bitmap.width):
                         val = glyph.bitmap[x,y]
                         if val > 0:
-                            self.buffer[txt][i].append((dx + x, y))
+                            self.buffer[txt][chHash].append((dx + x, y))
                 dx += glyph.bitmap.width
                 dx += spacing
 
                 #calculate cumulative width and height
-                glyph = self.font.get_glyph(ord(i))
+                glyph = self.font.get_glyph(ord(ch))
                 txtWidth += glyph.bitmap.width + spacing
                 txtHeight = max(txtHeight, glyph.bitmap.height) #get greatest hight
 
@@ -96,8 +99,9 @@ class TextDisplay():
         else:
             (cx, cy) = (0, 0)
 
-        for ch in txt:
-            for p in buff_txt[ch]:
+        for i in range(len(txt)):
+            chHash = txt[i] + str(i)
+            for p in buff_txt[chHash]:
                 self.matrix.setPixel(cx + posx + p[0], cy + posy + p[1], font_color)
 
     def floatingText(self, txt, speed=1, amplitude=10, spacing=1):
@@ -170,14 +174,16 @@ class TextDisplay():
 
                 if self.aniStarted:
                     ch = txt[prevChar]
-                    for p in buff_txt[ch]:
+                    chHash = ch + str(prevChar)
+                    for p in buff_txt[chHash]:
                         self.matrix.setPixel(cx + posx + p[0], cy + posy + p[1], color1)
 
                 if not self.aniFinished:
                     self.aniStarted = True
 
                     ch = txt[self.currChar]
-                    for p in buff_txt[ch]:
+                    chHash = ch + str(self.currChar)
+                    for p in buff_txt[chHash]:
                         self.matrix.setPixel(cx + posx + p[0], cy + posy + p[1], color2)
 
                     self.lastTimeChar = time.monotonic()
