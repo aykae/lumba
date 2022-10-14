@@ -46,7 +46,7 @@ class BluetoothReceiver:
             self.hasCommand = True
 
     #acknowledge that command was executed.        
-    def ackCommand(self, command):
+    def ackCommand(self, c):
         msg = ""
         if c == "BA":
             msg = "Color scheme switched to Basic."

@@ -1,1 +1,1 @@
-{"theme": "BASIC", "isSparkling": true}
+{"theme": ['0xFF0000', '0xFFFFFF'], "isSparkling": true}

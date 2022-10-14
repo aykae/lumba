@@ -10,10 +10,14 @@ matrix = Matrix(width=WIDTH, height=HEIGHT, rotation=180)
 
 # COLOR THEMES
 # (base_)
+
+
+#THEMES = {}
 SHADOW = '0xFFFFFF'
 BASIC = ('0xFF0000', '0xFFFFFF')
 HALLOWEEN = ('0xFF7400', '0x6D0063')
 CHRISTMAS = ('0x623004', '0x0B601C')
+
 
 # BOOLS
 isSparkling = True
@@ -28,17 +32,20 @@ ftime = 0
 # OPEN SIGN
 #
 
-def openInit(theme=BASIC):
-    global td
+def openInit():
+    global td, theme, isSparkling
 
     #load state from file
+    '''
     with open('state.txt', 'r') as state:
-        temp_dict = json.loads(state)
+        temp_dict = json.loads(state.read().rstrip())
         #temp_keys = temp_dict.keys()
 
-        theme = temp_dict["theme"]
+        theme = tuple(temp_dict["theme"])
+        print(theme)
         isSparkling = temp_dict["isSparkling"]
-
+    '''
+    
     font = 'fonts/IBMPlexMono-Bold-29.bdf'
     td = TextDisplay(matrix, font, theme[0])
     #td2 = TextDisplay(matrix, font2, '0xFF0000')
@@ -47,7 +54,7 @@ def openInit(theme=BASIC):
     td.drawText('OPEN', posx=1, posy=1, spacing=2, font_color=theme[1])
     td.drawText('OPEN', posx=0, posy=0, spacing=2 )
 
-def openUpdate(theme=BASIC):
+def openUpdate():
     td.dynamicChar('OPEN', posx=0, posy=0, spacing=2, charDelay=350, aniDelay=2500, color1=theme[0], color2=theme[1])
 
 
@@ -106,36 +113,38 @@ def executeCommand():
     
     matrix.clear()
     if isSignOn:
-        openInit(theme)
-        openUpdate(theme)
+        openInit()
+        openUpdate()
 
     matrix.flip()
 
     #notify user of successful command
     btr.ackCommand(c)
-
+    
+    '''
     #write new state to file
-    with open('state.txt', 'w') as state:
+    #HAD TO CHANGE TO READ, CUZ READ-ONLY OS
+    with open('state.txt', 'r') as state:
         temp_dict = {}
         temp_dict["theme"] = theme
         temp_dict["isSparkling"] = isSparkling
 
-        state.write(json.dumps(temp_dict))
-
+        #state.write(json.dumps(temp_dict))
+    '''
+    
 ###############
 ## MAIN CODE ##
 ###############
 
 btInit()
-theme=BASIC
-openInit(theme)
+openInit()
 sparklingInit()
 
 while True:
     btUpdate()
 
     if isSignOn:
-        openUpdate(theme)
+        openUpdate()
         if isSparkling:
             sparklingUpdate()
 
