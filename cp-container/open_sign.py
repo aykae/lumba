@@ -25,6 +25,7 @@ isSignOn = True
 
 # VARS
 theme = BASIC
+text = "OPEN"
 ftime = 0
 
 ################################
@@ -33,7 +34,7 @@ ftime = 0
 #
 
 def openInit():
-    global td, theme, isSparkling
+    global td
 
     #load state from file
     '''
@@ -49,13 +50,13 @@ def openInit():
     font = 'fonts/IBMPlexMono-Bold-29.bdf'
     td = TextDisplay(matrix, font, theme[0])
     #td2 = TextDisplay(matrix, font2, '0xFF0000')
-    td.loadText('OPEN', spacing=2)
+    td.loadText(text, spacing=2)
 
-    td.drawText('OPEN', posx=1, posy=1, spacing=2, font_color=theme[1])
-    td.drawText('OPEN', posx=0, posy=0, spacing=2 )
+    td.drawText(text, posx=1, posy=1, spacing=2, font_color=theme[1])
+    td.drawText(text, posx=0, posy=0, spacing=2 )
 
 def openUpdate():
-    td.dynamicChar('OPEN', posx=0, posy=0, spacing=2, charDelay=350, aniDelay=2500, color1=theme[0], color2=theme[1])
+    td.dynamicChar(text, posx=0, posy=0, spacing=2, charDelay=350, aniDelay=2500, color1=theme[0], color2=theme[1])
 
 
 def sparklingInit():
@@ -92,9 +93,10 @@ def btUpdate():
         btr.allowConnection()
 
 def executeCommand():
-    global theme, isSparkling, isSignOn
+    global theme, isSparkling, isSignOn, text
 
-    c = btr.command.upper()
+    command = btr.command.strip().split(' ')
+    c = command[0].upper()
 
     if c == "BA":
         theme = BASIC
@@ -106,6 +108,11 @@ def executeCommand():
         isSparkling = True
     elif c == "NS":
         isSparkling = False
+    elif c == "TEXT":
+        if len(command) > 1:
+            t = command[1]
+            if len(t) <= 4:
+                text = t
     elif c == "OFF":
         isSignOn = False
     elif c == "ON":
@@ -119,7 +126,7 @@ def executeCommand():
     matrix.flip()
 
     #notify user of successful command
-    btr.ackCommand(c)
+    btr.ackCommand(command)
     
     '''
     #write new state to file

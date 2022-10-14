@@ -46,8 +46,12 @@ class BluetoothReceiver:
             self.hasCommand = True
 
     #acknowledge that command was executed.        
-    def ackCommand(self, c):
+    def ackCommand(self, command):
+        c = command[0].upper()
+
         msg = ""
+        if c == "?" or c == "HELP" or c == "MENU":
+            msg = "Here are your available commands:"
         if c == "BA":
             msg = "Color scheme switched to Basic."
         elif c == "HW":
@@ -58,11 +62,21 @@ class BluetoothReceiver:
             msg = "Sparkling animation was enabled."
         elif c == "NS":
             msg = "Sparkling animation was disabled."
+        elif c == "TEXT":
+            if len(command) > 1:
+                t = command[1]
+                if len(t) <= 4:
+                    msg = "Text was changed to \"" + t + "\"."
+                else:
+                    msg = "Unsuccessful. Text must be four characters or less."
+            else:
+                msg = "Unsuccessful. Text must typed after the \"TEXT\" command."
         elif c == "OFF":
             msg = "Sign was switched off."
         elif c == "ON":
             msg = "Sign was switched on."
-        
+
+        msg += "\n" 
         self.uart.write(msg)
 
 
