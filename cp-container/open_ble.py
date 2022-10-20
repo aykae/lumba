@@ -52,8 +52,26 @@ class BluetoothReceiver:
         msg = ""
         if c == "?" or c == "HELP" or c == "MENU":
             msg = "Here are your available commands: \n"
-            msg += "\t \n"
-        if c == "BA":
+            msg += "\t Change Color Scheme:\n"
+            msg += "\t\t BA -> Basic, White and Red\n"
+            msg += "\t\t HW -> Halloween, Orange and Purple\n"
+            msg += "\t\t XS -> Christmas, Red and Green\n"
+            msg += "\n"
+
+            msg += "\t Set Background Animation:\n"
+            msg += "\t\t S: Enable sparkles\n"
+            msg += "\t\t NS: Disable sparkles\n"
+            msg += "\n"
+
+            msg += "\t Change Text:\n"
+            msg += "\t\t TEXT {your word}\n"
+            msg += "\n"
+
+            msg += "\t Power:\n"
+            msg += "\t\t OFF: Turn Sign Off\n"
+            msg += "\t\t ON: Turn Sign On\n"
+
+        elif c == "BA":
             msg = "Color scheme switched to Basic."
         elif c == "HW":
             msg = "Color scheme switched to Halloween."
@@ -77,7 +95,7 @@ class BluetoothReceiver:
         elif c == "ON":
             msg = "Sign was switched on."
         else:
-            msg = "Invalid command."
+            msg = "Command does not exist. Type \"?\" to see available commands."
 
         msg += "\n" 
         self.uart.write(msg)
