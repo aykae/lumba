@@ -15,6 +15,19 @@ class StarBackdrop():
         self.lastTime = time.monotonic()
         self.delay = delay
 
+    def checkForAdjacent(self, star):
+        keys = self.stardict.keys()
+        if (star[0] + 1, star[1]) in keys:
+            return True
+        elif (star[0] - 1, star[1]) in keys:
+            return True
+        elif (star[0], star[1] + 1) in keys:
+            return True
+        elif (star[0] + 1, star[1] - 1) in keys:
+            return True
+
+        return False
+
     def updateStars(self):
         #OPT: calculate next stars in delay gaps
 
@@ -27,7 +40,9 @@ class StarBackdrop():
                 sx = random.randint(0, self.matrix.display.width)
                 sy = random.randint(0, self.matrix.display.height)
 
-                if self.matrix.getPixel(sx, sy) == 0:
+                #hasAdjacent = self.checkForAdjacent((sx, sy))
+
+                if self.matrix.getPixel(sx, sy) == 0: #and not hasAdjacent:
                     self.stardict[(sx, sy)] = colorcon.rgbToHex(255, 255, 255)
 
             for i in self.stardict.keys():
