@@ -22,6 +22,7 @@ CHRISTMAS = ('0x623004', '0x0B601C')
 # BOOLS
 isSparkling = True
 isSignOn = True
+isLetterHighlightOn = True
 
 # VARS
 theme = BASIC
@@ -56,7 +57,8 @@ def openInit():
     td.drawText(text, posx=0, posy=0, spacing=2 )
 
 def openUpdate():
-    td.dynamicChar(text, posx=0, posy=0, spacing=2, charDelay=350, aniDelay=2500, color1=theme[0], color2=theme[1])
+    if isLetterHighlightOn:
+        td.dynamicChar(text, posx=0, posy=0, spacing=2, charDelay=350, aniDelay=2500, color1=theme[0], color2=theme[1])
 
 
 def sparklingInit():
@@ -93,7 +95,7 @@ def btUpdate():
         btr.allowConnection()
 
 def executeCommand():
-    global theme, isSparkling, isSignOn, text
+    global theme, isSparkling, isSignOn, isLetterHighlightOn, text
 
     command = btr.command.strip().split(' ')
     c = command[0].upper()
@@ -117,6 +119,10 @@ def executeCommand():
         isSignOn = False
     elif c == "ON":
         isSignOn = True 
+    elif c == "NH":
+        isLetterHighlightOn = False
+    elif c == "H":
+        isLetterHighlightOn = True
     
     matrix.clear()
     if isSignOn:

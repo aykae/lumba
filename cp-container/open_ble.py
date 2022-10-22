@@ -58,9 +58,11 @@ class BluetoothReceiver:
             msg += "\t\t XS -> Christmas, Red and Green\n"
             msg += "\n"
 
-            msg += "\t Set Background Animation:\n"
+            msg += "\t Set Animation:\n"
             msg += "\t\t S: Enable sparkles\n"
             msg += "\t\t NS: Disable sparkles\n"
+            msg += "\t\t H: Enable letter highlight\n"
+            msg += "\t\t NH: Disable letter highlight\n"
             msg += "\n"
 
             msg += "\t Change Text:\n"
@@ -81,6 +83,10 @@ class BluetoothReceiver:
             msg = "Sparkling animation was enabled."
         elif c == "NS":
             msg = "Sparkling animation was disabled."
+        elif c == "H":
+            msg = "Letter highlight was enabled."
+        elif c == "NH":
+            msg = "Letter highlight was disabled."
         elif c == "TEXT":
             if len(command) > 1:
                 t = command[1]
